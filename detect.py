@@ -31,6 +31,7 @@ Usage - formats:
 import argparse
 import csv
 import os
+os.environ['DISPLAY'] = ':99'
 import platform
 import sys
 from pathlib import Path
