@@ -226,6 +226,7 @@ def run(
                     writer.writeheader()
                 writer.writerow(data)
 
+        total_detections = 0
         # Process predictions
         for i, det in enumerate(pred):  # per image
             seen += 1
@@ -235,6 +236,9 @@ def run(
             else:
                 p, im0, frame = path, im0s.copy(), getattr(dataset, "frame", 0)
 
+            if len(det):
+                total_detections += len(det)
+                
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # im.jpg
             txt_path = str(save_dir / "labels" / p.stem) + ("" if dataset.mode == "image" else f"_{frame}")  # im.txt
@@ -310,6 +314,8 @@ def run(
 
         # Print time (inference-only)
         LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1e3:.1f}ms")
+        LOGGER.info(f"Total objects detected: {total_detections}")
+        return total_detections
 
     # Print results
     t = tuple(x.t / seen * 1e3 for x in dt)  # speeds per image
